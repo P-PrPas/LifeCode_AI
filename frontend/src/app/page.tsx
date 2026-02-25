@@ -5,11 +5,18 @@ import { InputForm } from '@/components/InputForm';
 import { MatrixBoard } from '@/components/MatrixBoard';
 import { AnalysisResult } from '@/components/AnalysisResult';
 
+interface ShapeCount {
+  circles: number;
+  triangles: number;
+  squares: number;
+}
+
 interface NumberAnalysis {
   dob_digits: number[];
   gift_number: number;
   life_code: number;
   weights: Record<number, number>;
+  shapes: Record<number, ShapeCount>;
   combo_lines: string[];
 }
 
@@ -82,13 +89,13 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-8 w-full">
               <MatrixBoard
                 title="Inner World"
-                weights={result.inner_world.weights}
+                shapes={result.inner_world.shapes}
                 combos={result.inner_world.combo_lines}
                 isInner={true}
               />
               <MatrixBoard
                 title="Outer World"
-                weights={result.outer_world.weights}
+                shapes={result.outer_world.shapes}
                 combos={result.outer_world.combo_lines}
                 isInner={false}
               />

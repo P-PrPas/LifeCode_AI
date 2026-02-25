@@ -29,6 +29,21 @@ def get_weights(dob: str, gift_number: int, life_code: int) -> Dict[int, int]:
         
     return weights
 
+def get_shapes(dob: str, gift_number: int, life_code: int) -> Dict[int, Dict[str, int]]:
+    shapes = {i: {"circles": 0, "triangles": 0, "squares": 0} for i in range(10)}
+    
+    for char in dob:
+        if char.isdigit():
+            shapes[int(char)]["circles"] += 1
+            
+    for char in str(gift_number):
+        shapes[int(char)]["triangles"] += 1
+        
+    for char in str(life_code):
+        shapes[int(char)]["squares"] += 1
+        
+    return shapes
+
 def detect_combos(weights: Dict[int, int]) -> List[str]:
     combos = []
     active_numbers = [num for num, w in weights.items() if w > 0]
@@ -51,6 +66,7 @@ def process_dob(dob: str) -> dict:
     gift_number = calculate_gift_number(dob)
     life_code = calculate_life_code(gift_number)
     weights = get_weights(dob, gift_number, life_code)
+    shapes = get_shapes(dob, gift_number, life_code)
     combos = detect_combos(weights)
     
     return {
@@ -58,5 +74,6 @@ def process_dob(dob: str) -> dict:
         "gift_number": gift_number,
         "life_code": life_code,
         "weights": weights,
+        "shapes": shapes,
         "combo_lines": combos
     }

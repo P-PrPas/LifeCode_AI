@@ -2,14 +2,20 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+interface ShapeCount {
+    circles: number;
+    triangles: number;
+    squares: number;
+}
+
 interface MatrixBoardProps {
     title: string;
-    weights: Record<number, number>;
+    shapes: Record<number, ShapeCount>;
     combos: string[];
     isInner?: boolean;
 }
 
-export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, weights, combos, isInner = true }) => {
+export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos, isInner = true }) => {
     // Required Matrix layout: 
     // Row 1: 1, 4, 7
     // Row 2: 2, 5, 8
@@ -21,24 +27,20 @@ export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, weights, combos
         [3, 6, 9, 0]
     ];
 
-    const renderShapes = (weight: number) => {
-        const shapes = [];
-        let remaining = weight;
+    const renderShapes = (shapeCount?: ShapeCount) => {
+        if (!shapeCount) return null;
+        const shapesElements = [];
 
-        // 5pt = Square, 3pt = Triangle, 1pt = Circle
-        while (remaining >= 5) {
-            shapes.push(<div key={`sq-${remaining}`} className="shape-square" title="5 Points (Life Code)" />);
-            remaining -= 5;
+        for (let i = 0; i < shapeCount.squares; i++) {
+            shapesElements.push(<div key={`sq-${i}`} className="shape-square" title="5 Points (Life Code)" />);
         }
-        while (remaining >= 3) {
-            shapes.push(<div key={`tr-${remaining}`} className="shape-triangle" title="3 Points (Gift Number)" />);
-            remaining -= 3;
+        for (let i = 0; i < shapeCount.triangles; i++) {
+            shapesElements.push(<div key={`tr-${i}`} className="shape-triangle" title="3 Points (Gift Number)" />);
         }
-        while (remaining >= 1) {
-            shapes.push(<div key={`cr-${remaining}`} className="shape-circle" title="1 Point (DOB Base)" />);
-            remaining -= 1;
+        for (let i = 0; i < shapeCount.circles; i++) {
+            shapesElements.push(<div key={`cr-${i}`} className="shape-circle" title="1 Point (DOB Base)" />);
         }
-        return <div className="flex flex-wrap gap-1 justify-center mt-2 min-h-[24px]">{shapes}</div>;
+        return <div className="flex flex-wrap gap-1 justify-center mt-2 min-h-[24px]">{shapesElements}</div>;
     };
 
     return (
@@ -71,7 +73,7 @@ export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, weights, combos
                                     <span className="text-xl font-bold text-gray-200 opacity-80">
                                         {num}
                                     </span>
-                                    {renderShapes(weights[num] || 0)}
+                                    {renderShapes(shapes[num])}
                                 </motion.div>
                             );
                         })}
