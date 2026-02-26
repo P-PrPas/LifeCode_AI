@@ -8,7 +8,7 @@ Life Code Matrix is a modern web application designed to calculate, visualize, a
 
 - **Dual-Calendar Calculation:** Calculate your Gift Number and Life Code independently for your Inner World (Thai Calendar) and Outer World (Chinese Calendar).
 - **Matrix Visualization:** A beautiful 3x3 grid UI that visually represents your core numbers.
-- **Accurate Shape Scoring:** 
+- **Accurate Shape Scoring:**
   - 🟢 **Circles** = Matches Base DOB digits (1 point)
   - 🔺 **Triangles** = Matches Gift Number digits (3 points)
   - 🟥 **Squares** = Matches Life Code digits (5 points)
@@ -19,12 +19,14 @@ Life Code Matrix is a modern web application designed to calculate, visualize, a
 ## 🚀 Tech Stack
 
 ### Frontend
+
 - **React 18 & Next.js 14** (App Router)
 - **Tailwind CSS v3** (with custom Glassmorphism & custom utility classes)
 - **Framer Motion** (for smooth micro-animations)
 - **Lucide React** (beautiful default icons)
 
 ### Backend
+
 - **Python 3.11 & FastAPI**
 - **Pydantic** (Data validation & API Schema)
 - **google-genai** (Google Gemini API SDK)
@@ -37,12 +39,14 @@ Life Code Matrix is a modern web application designed to calculate, visualize, a
 The absolute easiest way to get this project running is by using Docker Compose.
 
 ### Prerequisites
+
 1. [Docker & Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
 2. A free [Google Gemini API Key](https://aistudio.google.com/app/apikey).
 
 ### Installation Steps
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/[YOUR-USERNAME]/LifeCode_AI.git
    cd LifeCode_AI
@@ -60,6 +64,7 @@ The absolute easiest way to get this project running is by using Docker Compose.
      ```
 
 3. **Start the Application:**
+
    ```bash
    docker-compose up --build -d
    ```
@@ -75,35 +80,27 @@ The absolute easiest way to get this project running is by using Docker Compose.
 If you prefer to run the components locally without Docker for development purposes:
 
 ### 1. Backend Setup
+
 ```bash
 cd backend
 
-# Create a virtual environment (optional but recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create a local .env file inside /backend
-echo "GEMINI_API_KEY=your_api_key_here" > .env
+# Create and sync virtual environment with uv
+uv sync
 
 # Run FastAPI server
-uvicorn main:app --reload --port 8000
+uv run uvicorn main:app --reload --port 8000
 ```
 
 ### 2. Frontend Setup
+
 ```bash
 cd frontend
 
-# Install dependencies
-npm install
-
-# Create a local .env file inside /frontend
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env
+# Install dependencies using bun
+bun install
 
 # Run Next.js Dev Server
-npm run dev
+bun run dev
 ```
 
 ---
@@ -118,7 +115,7 @@ npm run dev
    - `4-5-6` (Gathering/Networking)
    - `7-8-9` (Great Fortuna)
    - `1-5-9` (Diligence)
-   - *etc.*
+   - _etc._
 
 ## 📜 License
 
