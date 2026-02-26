@@ -30,10 +30,12 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState<'th' | 'en'>('th');
 
-  const handleAnalyze = async (thaiDob: string, chineseDob: string) => {
+  const handleAnalyze = async (thaiDob: string, chineseDob: string, language: 'th' | 'en') => {
     setIsLoading(true);
     setError(null);
+    setLanguage(language);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       const res = await fetch(`${apiUrl}/api/analyze`, {
@@ -44,6 +46,7 @@ export default function Home() {
         body: JSON.stringify({
           thai_dob: thaiDob,
           chinese_dob: chineseDob,
+          language,
         }),
       });
 
@@ -53,8 +56,8 @@ export default function Home() {
 
       const data = await res.json();
       setResult(data);
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: Error | unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -92,12 +95,14 @@ export default function Home() {
                 shapes={result.inner_world.shapes}
                 combos={result.inner_world.combo_lines}
                 isInner={true}
+                language={language}
               />
               <MatrixBoard
                 title="Outer World"
                 shapes={result.outer_world.shapes}
                 combos={result.outer_world.combo_lines}
                 isInner={false}
+                language={language}
               />
             </div>
 
