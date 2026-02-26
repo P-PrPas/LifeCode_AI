@@ -4,12 +4,14 @@ import { Calendar, Search, Sparkles, BookOpen } from 'lucide-react';
 import { Solar, Lunar } from 'lunar-javascript';
 
 interface InputFormProps {
-    onSubmit: (thaiDob: string, chineseDob: string) => void;
+    // two dates plus language choice ('th' or 'en')
+    onSubmit: (thaiDob: string, chineseDob: string, language: 'th' | 'en') => void;
     isLoading: boolean;
 }
 
 export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     const [birthDate, setBirthDate] = useState('');
+    const [language, setLanguage] = useState<'th' | 'en'>('th');
 
     const previews = useMemo(() => {
         if (!birthDate) return { thai: '', chinese: '' };
@@ -50,7 +52,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
             const lunar = solar.getLunar();
             const chineseDob = `${lunar.getYear()}-${lunar.getMonth().toString().padStart(2, '0')}-${lunar.getDay().toString().padStart(2, '0')}`;
 
-            onSubmit(thaiDob, chineseDob);
+            onSubmit(thaiDob, chineseDob, language);
         }
     };
 
@@ -66,17 +68,17 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
             >
                 <div className="flex flex-col md:flex-row gap-10 items-center">
                     <div className="flex-1 w-full space-y-6">
-                        <div className="space-y-2">
-                            <label className="flex items-center gap-2 text-sm font-semibold text-gray-400 uppercase tracking-[0.2em]">
-                                <Calendar className="w-4 h-4 !text-white" />
-                                Select Your Birth Date
+                        <div className="space-y-4">
+                            <label className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em]">
+                                <Calendar className="w-4 h-4 text-white" />
+                                <span className="text-gray-400">Select Your Birth Date</span>
                             </label>
                             <input
                                 type="date"
                                 required
                                 value={birthDate}
                                 onChange={(e) => setBirthDate(e.target.value)}
-                                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all outline-none"
+                                className="w-full mt-4 px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all outline-none"
                             />
                         </div>
 
@@ -101,7 +103,18 @@ export const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => 
                         </AnimatePresence>
                     </div>
 
-                    <div className="flex-shrink-0 mt-6">
+                    <div className="flex-shrink-0 space-y-4">
+                        <div className="flex items-center gap-2">
+                            <label className="text-sm font-semibold">Response Language:</label>
+                            <select
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value as 'th' | 'en')}
+                                className="px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-white text-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all outline-none"
+                            >
+                                <option value="th">Thai (TH)</option>
+                                <option value="en">English (EN)</option>
+                            </select>
+                        </div>
                         <button
                             type="submit"
                             disabled={isLoading || !birthDate}
