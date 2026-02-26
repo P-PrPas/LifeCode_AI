@@ -12,7 +12,7 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ analysis }) => {
     // Formatting markdown-ish text to standard HTML for simplicity 
     // (Gemini might return markdown like **bold**)
     const formattedText = analysis.split('\n').map((line, i) => {
-        if (line.startsWith('##')) return <h3 key={i} className="text-xl font-bold mt-4 mb-2 text-primary-500">{line.replace('##', '').trim()}</h3>;
+        if (line.startsWith('###')) return <h3 key={i} className="text-xl font-bold mt-4 mb-2 text-primary-500">{line.replace('###', '').trim()}</h3>;
         if (line.startsWith('**') && line.endsWith('**')) return <p key={i} className="font-bold mt-2">{line.replace(/\*\*/g, '')}</p>;
         if (line.trim() === '') return <br key={i} />;
         return <p key={i} className="mb-1 text-gray-300 leading-relaxed">{line.replace(/\*\*/g, '')}</p>;

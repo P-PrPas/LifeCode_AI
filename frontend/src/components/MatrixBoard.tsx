@@ -14,6 +14,7 @@ interface MatrixBoardProps {
     shapes: Record<number, ShapeCount>;
     combos: string[];
     isInner?: boolean;
+    language?: 'th' | 'en';
 }
 
 const matrixKeywords: Record<number, { th: string; en: string }> = {
@@ -29,7 +30,7 @@ const matrixKeywords: Record<number, { th: string; en: string }> = {
     0: { th: 'จิตวิญญาณ', en: 'Spirit' }
 };
 
-export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos, isInner = true }) => {
+export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos, isInner = true, language = 'en' }) => {
     const layout = [
         [1, 4, 7],
         [2, 5, 8],
@@ -41,7 +42,7 @@ export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos,
         const shapesElements = [];
 
         for (let i = 0; i < shapeCount.squares; i++) {
-            shapesElements.push(<div key={`sq-${i}`} className="w-2 h-2 bg-accent rounded-sm shadow-[0_0_8px_rgba(20,184,166,0.6)]" title="5 Points (Life Code)" />);
+            shapesElements.push(<div key={`sq-${i}`} className="w-2 h-2 bg-accent shadow-[0_0_8px_rgba(20,184,166,0.6)]" title="5 Points (Life Code)" />);
         }
         for (let i = 0; i < shapeCount.triangles; i++) {
             shapesElements.push(<div key={`tr-${i}`} className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-bottom-[7px] border-b-primary-400" style={{ borderBottom: '7px solid #3b82f6' }} title="3 Points (Gift Number)" />);
@@ -77,6 +78,7 @@ export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos,
                         {row.map((num) => {
                             const isHighlight = combos.some(combo => combo.split('-').includes(num.toString()));
                             const keyword = matrixKeywords[num];
+                            const lang = language === 'th' ? keyword.th : keyword.en;
                             return (
                                 <motion.div
                                     whileHover={{ y: -5, backgroundColor: 'rgba(255,255,255,0.05)' }}
@@ -94,7 +96,7 @@ export const MatrixBoard: React.FC<MatrixBoardProps> = ({ title, shapes, combos,
                                             {num}
                                         </span>
                                         <span className="text-[8px] text-gray-500 font-medium uppercase mt-1">
-                                            {keyword.en}
+                                            {lang}
                                         </span>
                                     </div>
 
