@@ -5,6 +5,7 @@ class DOBRequest(BaseModel):
     thai_dob: str = Field(..., description="Date of birth from Thai calendar in YYYY-MM-DD format")
     chinese_dob: str = Field(..., description="Date of birth from Chinese calendar in YYYY-MM-DD format")
     language: str = Field('th', description="Preferred language for AI response ('th' or 'en')")
+    api_key: Optional[str] = Field(None, description="Optional Gemini API key for production use")
 
 class ShapeCount(BaseModel):
     circles: int
