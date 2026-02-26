@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { InputForm } from '@/components/InputForm';
 import { MatrixBoard } from '@/components/MatrixBoard';
 import { AnalysisResult } from '@/components/AnalysisResult';
@@ -32,7 +33,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<'th' | 'en'>('th');
 
-  const handleAnalyze = async (thaiDob: string, chineseDob: string, language: 'th' | 'en') => {
+  const handleAnalyze = async (thaiDob: string, chineseDob: string, language: 'th' | 'en', apiKey: string) => {
     setIsLoading(true);
     setError(null);
     setLanguage(language);
@@ -47,6 +48,7 @@ export default function Home() {
           thai_dob: thaiDob,
           chinese_dob: chineseDob,
           language,
+          api_key: apiKey,
         }),
       });
 
@@ -55,6 +57,15 @@ export default function Home() {
       }
 
       const data = await res.json();
+      const aiText = typeof data?.ai_analysis === 'string' ? data.ai_analysis : '';
+      const isAiError = aiText.startsWith('Error generating analysis from Gemini:');
+
+      if (isAiError) {
+        setError('Gemini API error. Please check your API key and try again.');
+        setResult({ ...data, ai_analysis: '' });
+        return;
+      }
+
       setResult(data);
     } catch (err: Error | unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -80,11 +91,41 @@ export default function Home() {
         {/* Input Form */}
         <InputForm onSubmit={handleAnalyze} isLoading={isLoading} />
 
-        {error && (
-          <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-center">
-            {error}
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              onClick={() => setError(null)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-gray-900 border border-red-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <h2 className="text-xl font-bold text-white">Analysis Error</h2>
+                </div>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  {error}
+                </p>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={() => setError(null)}
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-semibold transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Results Section */}
         {result && (

@@ -110,7 +110,7 @@ def analyze_life_code(request: DOBRequest):
         prompt = build_prompt(request.language)
         
         # 3. Get AI Analysis
-        ai_analysis_text = get_life_code_analysis(prompt)
+        ai_analysis_text = get_life_code_analysis(prompt, request.api_key)
         
         return AnalysisResponse(
             inner_world=NumberAnalysis(**inner_world_data),
